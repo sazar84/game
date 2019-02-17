@@ -34,10 +34,11 @@ document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 document.addEventListener("mousemove", mouseMoveHandler, false);
 
+
 function generateColor() {
     return '#' + Math.floor(Math.random()*0xffffff).toString(16)
   }
-  var newColor = generateColor();
+var newColor = generateColor();
 
 function keyDownHandler(e) {
   if(e.keyCode == 39) {
@@ -70,7 +71,6 @@ function collisionDetection() {
           dy = -dy;
           b.status = 0;
           score++;
-
           if(score == brickRowCount*brickColumnCount) {
             alert("YOU WIN, CONGRATS!");
             document.location.reload();
@@ -81,22 +81,14 @@ function collisionDetection() {
   }
 }
 
-
-
-function drawBall() {
-  ctx.beginPath();
-  ctx.arc(x, y, ballRadius, 0, Math.PI*2);
-  ctx.fillStyle = newColor;
-  ctx.fill();
-  ctx.closePath();
-}
 function drawPaddle() {
   ctx.beginPath();
   ctx.rect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
-  ctx.fillStyle = newColor;
+  ctx.fillStyle = "grey";
   ctx.fill();
   ctx.closePath();
 }
+
 function drawBricks() {
   for(var c=0; c<brickColumnCount; c++) {
     for(var r=0; r<brickRowCount; r++) {
@@ -114,16 +106,35 @@ function drawBricks() {
     }
   }
 }
+
 function drawScore() {
   ctx.font = "16px Arial";
-  ctx.fillStyle = newColor;
+  ctx.fillStyle = "red";
   ctx.fillText("Score: "+score, 8, 20);
 }
 function drawLives() {
   ctx.font = "16px Arial";
-  ctx.fillStyle = newColor;
+  ctx.fillStyle = "red";
   ctx.fillText("Lives: "+lives, canvas.width-65, 20);
 }
+
+function drawBall() {
+    ctx.beginPath();
+    ctx.arc(x, y, ballRadius, 0, Math.PI*2);
+    if(x == canvas.width-ballRadius || x == 0) {
+      dx = -dx;
+    }
+    if(y + dy < ballRadius) {
+      dy = -dy;
+    }
+    else if(y + dy > canvas.height-ballRadius) {
+      if(x > paddleX && x < paddleX + paddleWidth) {
+        dy = -dy;
+      }}
+    ctx.fillStyle = "grey";
+    ctx.fill();
+    ctx.closePath();
+  }
 
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -145,6 +156,7 @@ function draw() {
       dy = -dy;
     }
     else {
+        alert("You lose a life !!!");
       lives--;
       if(!lives) {
         alert("GAME OVER");
@@ -171,4 +183,4 @@ function draw() {
   y += dy;
 }
 
-setInterval(draw, 15);
+setInterval(draw, 10);
